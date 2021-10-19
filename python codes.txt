@@ -1,0 +1,36 @@
+df['weekend'] = df['dayofweek'].apply(lambda x: 1 if (x>3)  else 0)
+df['Gender'].replace(to_replace=['male','female'], value=[0,1],inplace=True)
+Feature = df[['Principal','terms','age','Gender','weekend']]
+Feature = pd.concat([Feature,pd.get_dummies(df['education'])], axis=1)
+Feature.drop(['Master or Above'], axis = 1,inplace=True)
+
+X = Feature
+X[0:5]
+
+y = df['loan_status'].values
+y[0:5]
+
+X= preprocessing.StandardScaler().fit(X).transform(X)
+X[0:5]
+
+
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=4)
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+LR = LogisticRegression(C=0.01, solver='liblinear').fit(X_train,y_train)
+
+yhat = LR.predict(X_test)
+yhat[0:5]
+
+yhat_prob = LR.predict_proba(X_test)
+yhat_prob[0:5]
+
+
+
+
+
+from sklearn.metrics import jaccard_score
+print("JACCARD SCORE:", jaccard_score(y1_test, y3hat,pos_label=0))
